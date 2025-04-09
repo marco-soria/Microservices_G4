@@ -2,12 +2,14 @@
 using Microservices.Services.CouponAPI.Data;
 using Microservices.Services.CouponAPI.Models;
 using Microservices.Services.CouponAPI.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Microservices.Services.CouponAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CouponAPIController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
@@ -22,18 +24,19 @@ namespace Microservices.Services.CouponAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "ADMIN")]
         public ResponseDto GetAll()
         {
             try
             {
                 IEnumerable<Coupon> couponList = _db.Coupon.ToList();
                 _response.Result = _mapper.Map<IEnumerable<CouponDto>>(couponList);
-                _response.Message = "Coupons retrieved successfully.";
+                _response.Message = "Cupones obtenidos con exito.";
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = "An error ocurred when retrieving the lsit of coupons " + ex.Message;
+                _response.Message = "Ocurrio un error al obtener los cupones " + ex.Message;
             }
 
             return _response;
@@ -46,22 +49,22 @@ namespace Microservices.Services.CouponAPI.Controllers
             try
             {
                 Coupon coupon = _db.Coupon.FirstOrDefault(x => x.CouponId == id);
-                if (coupon is not null)
+                if (coupon != null)
                 {
                     var couponDto = _mapper.Map<CouponDto>(coupon);
                     _response.Result = couponDto;
-                    _response.Message = $"Coupon {couponDto.CouponCode} retrieved successfully";
+                    _response.Message = $"Cupon {couponDto.CouponCode} recuperado con exito";
                 }
                 else
                 {
                     _response.IsSuccess = false;
-                    _response.Message = $"Coupon not found";
+                    _response.Message = "Cupon no encontrado";
                 }
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = "An error ocurred when retrieving the coupon " + ex.Message;
+                _response.Message = "Ocurrio un error al intentar obtener el cupon " + ex.Message;
             }
 
             return _response;
@@ -73,87 +76,93 @@ namespace Microservices.Services.CouponAPI.Controllers
         {
             try
             {
-                Coupon coupon = _db.Coupon.FirstOrDefault(x => x.CouponCode.ToLower().Trim() == code.ToLower().Trim());
-                if (coupon is not null)
+                Coupon coupon =
+                    _db.Coupon.FirstOrDefault(x => x.CouponCode.ToLower().Trim() == code.ToLower().Trim());
+                if (coupon != null)
                 {
                     _response.Result = _mapper.Map<CouponDto>(coupon);
-                    _response.Message = $"Coupon {coupon.CouponCode} retrieved successfully";
+                    _response.Message = $"Cupon {coupon.CouponCode} recuperado con exito";
                 }
                 else
                 {
                     _response.IsSuccess = false;
-                    _response.Message = $"Coupon not found";
+                    _response.Message = "Cupon no encontrado";
                 }
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = "An error ocurred when retrieving the coupon " + ex.Message;
+                _response.Message = "Ocurrio un error al intentar obtener el cupon " + ex.Message;
             }
 
             return _response;
         }
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public ResponseDto Post([FromBody] CouponDto couponDto)
         {
             try
             {
-                if (couponDto is not null)
+                if (couponDto != null)
                 {
                     Coupon coupon = _mapper.Map<Coupon>(couponDto);
                     _db.Coupon.Add(coupon);
                     _db.SaveChanges();
 
                     _response.Result = _mapper.Map<CouponDto>(coupon);
-                    _response.Message = $"Coupon {couponDto.CouponCode} successfully created";
+                    _response.Message = $"Cupon {couponDto.CouponCode} creado con exito";
+
                 }
                 else
                 {
                     _response.IsSuccess = false;
-                    _response.Message = $"Coupon {couponDto.CouponCode} is not valid";
+                    _response.Message = $"Cupon {couponDto.CouponCode} ingresado no es valido";
                 }
-
             }
             catch (Exception ex)
             {
-
                 _response.IsSuccess = false;
-                _response.Message = "An error ocurred when creating the coupon " + ex.Message;
-
+                _response.Message = "Ocurrio un error al crear el cupon " + ex.Message;
             }
+
             return _response;
         }
 
         [HttpPut]
+        [Authorize(Roles = "ADMIN")]
         public ResponseDto Put([FromBody] CouponDto couponDto)
         {
             try
             {
-                if (couponDto is not null)
+                if (couponDto != null)
                 {
                     Coupon coupon = _mapper.Map<Coupon>(couponDto);
+
                     _db.Coupon.Update(coupon);
                     _db.SaveChanges();
 
                     _response.Result = _mapper.Map<CouponDto>(coupon);
-                    _response.Message = $"Coupon {couponDto.CouponCode} successfully updated";
+                    _response.Message = $"Cupon {couponDto.CouponCode} actualizado con exito";
                 }
                 else
                 {
                     _response.IsSuccess = false;
-                    _response.Message = $"Coupon {couponDto.CouponCode} is not valid";
+                    _response.Message = $"Cupon {couponDto.CouponCode} ingresado no es valido";
                 }
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = "An error ocurred when updating the coupon " + ex.Message;
+                _response.Message = "Ocurrio un error al crear el cupon " + ex.Message;
             }
+
             return _response;
         }
 
         [HttpDelete]
+        [Route("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public ResponseDto Delete(int id)
         {
             try
@@ -161,7 +170,7 @@ namespace Microservices.Services.CouponAPI.Controllers
                 if (id <= 0)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Coupon id is not valid";
+                    _response.Message = "El id del cupon no es valido";
                 }
                 else
                 {
@@ -172,22 +181,23 @@ namespace Microservices.Services.CouponAPI.Controllers
                         _db.SaveChanges();
 
                         _response.Result = _mapper.Map<CouponDto>(coupon);
-                        _response.Message = $"Coupon {coupon.CouponCode} deleted successfully";
+                        _response.Message = $"Cupon {coupon.CouponCode} eliminado con exito";
                     }
                     else
                     {
                         _response.IsSuccess = false;
-                        _response.Message = $"The coupon entered is not valid";
+                        _response.Message = $"Cupon ingresado no es valido";
                     }
                 }
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = "An error ocurred when deleting the coupon " + ex.Message;
+                _response.Message = "Ocurrio un error al crear el cupon " + ex.Message;
             }
 
             return _response;
         }
+
     }
 }

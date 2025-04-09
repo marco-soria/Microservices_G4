@@ -8,6 +8,6 @@
 
         public double DiscountAmount { get; set; }
 
-        public string MinimumAmount { get; set; }
+        public double MinimumAmount { get; set; }
     }
 }
