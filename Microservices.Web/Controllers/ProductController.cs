@@ -91,12 +91,12 @@ namespace Microservices.Web.Controllers
 
         public async Task<IActionResult> ProductDelete(int productId)
         {
-            //ProductDto? model = new();
+            ProductDto? model = new();
             ResponseDto? responseDto = await _productService.GetProductByIdAsync(productId);
 
             if (responseDto != null && responseDto.IsSuccess)
             {
-                ProductDto? model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(responseDto.Result));
+                model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(responseDto.Result));
                 return View(model);
             }
             else
