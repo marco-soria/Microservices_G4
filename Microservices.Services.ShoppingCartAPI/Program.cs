@@ -1,18 +1,16 @@
 using AutoMapper;
-using Microservices.Services.ProductAPI;
-using Microservices.Services.ProductAPI.Data;
-using Microservices.Services.ProductAPI.Extensions;
+using Microservices.Services.ShopingCartAPI;
+using Microservices.Services.ShopingCartAPI.Data;
+using Microservices.Services.ShopingCartAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -24,17 +22,18 @@ builder.Services.AddSwaggerGen(option =>
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
+
     option.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
             {
-                Reference= new OpenApiReference
+                Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id=JwtBearerDefaults.AuthenticationScheme
+                    Type = ReferenceType.SecurityScheme,
+                    Id = JwtBearerDefaults.AuthenticationScheme
                 }
-            }, new string[]{}
+            }, new string[] {}
         }
     });
 });
@@ -46,9 +45,9 @@ IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+
 builder.AddAppAuthentication();
 builder.Services.AddAuthorization();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -75,7 +74,6 @@ void ApplyMigration()
     using (var scope = app.Services.CreateScope())
     {
         var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
         if (_db.Database.GetPendingMigrations().Count() > 0)
         {
             _db.Database.Migrate();

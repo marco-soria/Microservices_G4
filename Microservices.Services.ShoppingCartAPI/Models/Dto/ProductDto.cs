@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Microservices.Services.ProductAPI.Models.Dto
+﻿namespace Microservices.Services.ShopingCartAPI.Models.Dto
 {
     public class ProductDto
     {
@@ -10,7 +8,5 @@ namespace Microservices.Services.ProductAPI.Models.Dto
         public string Description { get; set; }
         public string CategoryName { get; set; }
         public string ImageUrl { get; set; }
-        [Range(1, 100)]
-        public int Count { get; set; }
     }
 }
