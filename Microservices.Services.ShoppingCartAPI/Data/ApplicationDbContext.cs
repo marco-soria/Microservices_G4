@@ -1,4 +1,4 @@
-﻿using Microservices.Services.ShopingCartAPI.Models;
+﻿using Microservices.Services.ShoppingCartAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 

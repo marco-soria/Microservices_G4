@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Microservices.Services.ShopingCartAPI.Models
+namespace Microservices.Services.ShoppingCartAPI.Models
 {
     public class CartHeader
     {

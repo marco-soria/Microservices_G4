@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using Microservices.Services.ShopingCartAPI.Models.Dto;
+using Microservices.Services.ShoppingCartAPI.Models.Dto;
 
-namespace Microservices.Services.ShopingCartAPI.Models
+namespace Microservices.Services.ShoppingCartAPI.Models
 {
     public class CartDetails
     {

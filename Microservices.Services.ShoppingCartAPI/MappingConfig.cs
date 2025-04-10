@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Microservices.Services.ShopingCartAPI.Models;
-using Microservices.Services.ShopingCartAPI.Models.Dto;
+using Microservices.Services.ShoppingCartAPI.Models;
+using Microservices.Services.ShoppingCartAPI.Models.Dto;
 
 namespace Microservices.Services.ShopingCartAPI
 {
