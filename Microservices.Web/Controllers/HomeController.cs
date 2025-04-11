@@ -17,6 +17,24 @@ namespace Microservices.Web.Controllers
             _productService = productService;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            List<ProductDto>? list = new();
+
+            ResponseDto? response = await _productService.GetAllProductAsync();
+
+            if (response != null && response.IsSuccess)
+            {
+                list = JsonConvert.DeserializeObject<List<ProductDto>>(Convert.ToString(response.Result));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+
+            return View(list);
+        }
+
         [HttpGet]
         public async Task<IActionResult> ProductDetails(int productId)
         {
