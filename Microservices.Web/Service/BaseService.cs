@@ -23,7 +23,7 @@ namespace Microservices.Web.Service
         {
             try
             {
-                HttpClient client = _clientFactory.CreateClient("Microservicios_G4");
+                HttpClient client = _clientFactory.CreateClient("Microservices_G4");
                 HttpRequestMessage message = new HttpRequestMessage();
                 message.Headers.Add("Accept", "application/json");
 
