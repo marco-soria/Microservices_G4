@@ -10,7 +10,7 @@ using System;
 
 namespace Microservices.Services.ShoppingCartAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/shoppingCart")]
     [ApiController]
     public class ShoppingCartAPIController : ControllerBase
     {
@@ -75,7 +75,7 @@ namespace Microservices.Services.ShoppingCartAPI.Controllers
             return _responseDto;
         }
 
-        [HttpPost]
+        [HttpPost("CartUpsert")]
         public async Task<ResponseDto> CartUpsert(CartDto cartDto)
         {
             try
@@ -93,6 +93,7 @@ namespace Microservices.Services.ShoppingCartAPI.Controllers
                     //Relacionamos los details de cada producto con su cabezera
                     cartDto.CartDetailsDto.First().CartHeaderId = cartHeader.CartHeaderId;
                     CartDetails cartDetails = _mapper.Map<CartDetails>(cartDto.CartDetailsDto);
+                    //CartDetails cartDetails = _mapper.Map<CartDetails>(cartDto.CartDetailsDto.First());
                     _db.CartDetails.Add(cartDetails);
                     await _db.SaveChangesAsync();
 
