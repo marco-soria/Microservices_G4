@@ -16,10 +16,11 @@ namespace Microservices.Web.Controllers
             _shoppingCartService = shoppingCartService;
         }
 
+
         //[Authorize]
         public async Task<IActionResult> ShoppingCartIndex()
         {
-            var item = await LoadCartDtoBasedOnLoggedUserId();
+            var item = await LoadCartDtoBasedOnLoggedUser();
             return View(item);
         }
 
@@ -55,7 +56,7 @@ namespace Microservices.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ApplyCoupon(CartDto cartDto)
         {
-            ResponseDto responseDto = await _shoppingCartService.ApplyCouponAsync(cartDto);
+            ResponseDto? responseDto = await _shoppingCartService.ApplyCouponAsync(cartDto);
             if (responseDto != null && responseDto.IsSuccess)
             {
                 TempData["success"] = "Cupon aplicado correctamente";
@@ -79,12 +80,12 @@ namespace Microservices.Web.Controllers
             return View();
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
 
-        private async Task<CartDto> LoadCartDtoBasedOnLoggedUserId()
+        private async Task<CartDto> LoadCartDtoBasedOnLoggedUser()
         {
             var userId = User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
             ResponseDto responseDto = await _shoppingCartService.GetCartByUserIdAsync(userId);

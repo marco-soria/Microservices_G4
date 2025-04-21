@@ -15,19 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<ICouponService, CouponService>();
-
-
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
-
-builder.Services.AddHttpClient("Product", x => x.BaseAddress =
-new Uri(builder.Configuration["ServiceUrls:ProductAPI"]))
-    .AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
-builder.Services.AddHttpClient("Coupon", x => x.BaseAddress
-= new Uri(builder.Configuration["ServiceUrls:CouponAPI"]))
-    .AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -54,9 +41,22 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
+
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
+
+builder.Services.AddHttpClient("Product", x => x.BaseAddress =
+new Uri(builder.Configuration["ServiceUrls:ProductAPI"]))
+    .AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
+builder.Services.AddHttpClient("Coupon", x => x.BaseAddress
+= new Uri(builder.Configuration["ServiceUrls:CouponAPI"]))
+    .AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
 
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);

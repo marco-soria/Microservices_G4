@@ -8,9 +8,9 @@ namespace Microservices.Services.ShoppingCartAPI.Service
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public ProductService(IHttpClientFactory clientFactory)
+        public ProductService(IHttpClientFactory httpClientFactory)
         {
-            _httpClientFactory = clientFactory;
+            _httpClientFactory = httpClientFactory;
         }
         public async Task<IEnumerable<ProductDto>> GetProducts()
         {
